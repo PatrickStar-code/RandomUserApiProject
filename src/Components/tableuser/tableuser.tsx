@@ -1,18 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useContext, useState } from "react";
 import { UserContext } from "../../context";
+import { Paginate } from "./components/paginate/paginate";
 
 export function TableUser() {
   const [currentUser, setCurrentUser] = useState<number>(0);	
-const {UserList,loading} = useContext(UserContext);
+const {UserList,loading,setCurrentPage,currentPage,itemsPerPage} = useContext(UserContext);
+
   function setDetailsModal(uuid : string) {
     const index = UserList.findIndex((user) => user.login.uuid === uuid);
     setCurrentUser(index)
   }
 
-
+  const LastItemIndex = currentPage * itemsPerPage;
+  const FirstItemIndex = LastItemIndex - itemsPerPage;
+  const currentItems = UserList.slice(FirstItemIndex, LastItemIndex);
 
   return (
     <>
+    <Paginate TotalItens={UserList.length} ItensPerPage={itemsPerPage} setCurrentPages={setCurrentPage} currentPage={currentPage}/>
     <div className="overflow-x-auto">
       <table className="table">
         {/* head */}
@@ -30,7 +36,7 @@ const {UserList,loading} = useContext(UserContext);
            <tr><td  colSpan={4} className="text-center pt-6"><span className="loading loading-ring loading-lg"></span></td></tr>
           }
           {UserList.length === 0 && loading === false ? 
-          <tr><td colSpan={4} className="text-center p-6"><span className="text-2xl font-mono">No Data !! &#x1F614;</span></td></tr> : UserList.map((user) => (
+          <tr><td colSpan={4} className="text-center p-6"><span className="text-2xl font-mono">No Data !! &#x1F614;</span></td></tr> : currentItems.map((user) => (
             <tr key={user.login.uuid}>
               <td>
                 <div className="flex items-center space-x-3">

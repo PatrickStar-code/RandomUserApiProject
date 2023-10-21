@@ -49,6 +49,9 @@ export interface UserContextProps {
   user: UserProps[];
   UserList: UserProps[];
   loading: boolean;
+  currentPage: number;
+  itemsPerPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   GetUDataUser: (filter?: string) => void;
   SetNewList: (NewData: UserProps[]) => void;
   FilterUsers(currentFilter: string): void;
@@ -60,10 +63,14 @@ export function ContextProvdier({ children }: ContextProvdierProps) {
   const [user, setUser] = useState<UserProps[]>([]);
   const [UserList, setUserList] = useState<UserProps[]>([]);
   const [loading, setLoading] = useState(false);
+  const [currentPage,setCurrentPage] = useState(1);
+const [itemsPerPage] = useState(10);
+console.log(UserList)
+
 
   async function GetUDataUser(filter?: string) {
     setLoading(true);
-    const Result = await api.get("/?results=10&nat=br&seed=123", {
+    const Result = await api.get("/?results=100&nat=br&seed=123", {
       params: {
         filter,
       },
@@ -95,6 +102,7 @@ export function ContextProvdier({ children }: ContextProvdierProps) {
   
   function FilterUsers(currentFilter: string) {
     SetNewList(SearchInFilter(currentFilter));
+    setCurrentPage(1);
   }
 
   return (
@@ -106,6 +114,9 @@ export function ContextProvdier({ children }: ContextProvdierProps) {
         UserList,
         loading,
         FilterUsers,
+        currentPage,
+        itemsPerPage,
+        setCurrentPage
       }}
     >
       {children}
