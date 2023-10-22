@@ -65,12 +65,11 @@ export function ContextProvdier({ children }: ContextProvdierProps) {
   const [loading, setLoading] = useState(false);
   const [currentPage,setCurrentPage] = useState(1);
 const [itemsPerPage] = useState(10);
-console.log(UserList)
 
 
   async function GetUDataUser(filter?: string) {
     setLoading(true);
-    const Result = await api.get("/?results=100&nat=br&seed=123", {
+    const Result = await api.get("/?results=50&nat=br&seed=123", {
       params: {
         filter,
       },
